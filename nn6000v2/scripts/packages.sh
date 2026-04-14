@@ -15,7 +15,7 @@ remove_unwanted_packages() {
         "dae" "daed" "mihomo" "geoview" "tailscale" "open-app-filter" "msd_lite"
     )
     local small8_packages=(
-        "ppp" "firewall" "dae" "daed" "daed-next" "libnftnl" "nftables" "dnsmasq" "luci-app-alist"
+        "ppp" "firewall" "dae" "daed" "daed-next" "libnftnl" "nftables" "dnsmasq" "luci-app-openlist"
         "alist" "opkg" "smartdns" "luci-app-smartdns" "easytier" "luci-app-natmap"
     )
 
