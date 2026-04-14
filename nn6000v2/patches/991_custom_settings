@@ -119,15 +119,23 @@ configure_dropbear() {
 #-------------------------------------------------------------------------------
 main() {
     log_info "开始应用自定义系统配置..."
+
+    # 1. 修改主机名为 OpenWrt 并立即应用
+    log_info "正在设置主机名为 OpenWrt..."
+    uci set system.@system[0].hostname='OpenWrt'
+    uci commit system
+    # 这一行可以让主机名在不重启的情况下立即生效
+    echo "OpenWrt" > /proc/sys/kernel/hostname
+
+    # 2. 设置默认密码为 password (双重确认写法)
+    log_info "正在设置默认登录密码..."
+    (echo "password"; sleep 1; echo "password") | passwd root >/dev/null 2>&1
     
-    # 配置连接跟踪
+    # 3. 配置连接跟踪
     configure_conntrack
     
-    # 配置 dropbear
+    # 4. 配置 dropbear
     configure_dropbear
 
     log_info "自定义配置应用完成"
 }
-
-# 执行主函数
-main
