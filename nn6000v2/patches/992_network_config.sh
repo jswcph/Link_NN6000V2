@@ -6,14 +6,14 @@
 
 # ==================== WiFi 配置 ====================
 # 5G WiFi 设置
-WIFI_5G_SSID="500/5"
-WIFI_5G_KEY="147258369"
+WIFI_5G_SSID="OpenWrt_5G"
+WIFI_5G_KEY="password"
 WIFI_5G_CHANNEL=36
 WIFI_5G_TXPOWER=24
 
 # 2.4G WiFi 设置
-WIFI_2G_SSID="500/5"
-WIFI_2G_KEY="147258369"
+WIFI_2G_SSID="OpenWrt_234G"
+WIFI_2G_KEY="password"
 WIFI_2G_CHANNEL=1
 WIFI_2G_TXPOWER=22
 
