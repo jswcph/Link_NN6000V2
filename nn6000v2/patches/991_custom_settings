@@ -11,6 +11,7 @@
 #-------------------------------------------------------------------------------
 CONNTRACK_MAX=65535
 DROPBEAR_CONFIG="dropbear.main"
+HOSTNAME_TARGET="OpenWrt"
 
 #-------------------------------------------------------------------------------
 # 辅助函数：输出日志
@@ -21,6 +22,44 @@ log_info() {
 
 log_error() {
     echo "[ERROR] $*" >&2
+}
+
+#-------------------------------------------------------------------------------
+# 配置路由器主机名
+#-------------------------------------------------------------------------------
+configure_hostname() {
+    local current_hostname
+
+    # 获取当前主机名
+    current_hostname=$(uci get system.@system[0].hostname 2>/dev/null)
+
+    # 如果已经是目标名称，无需修改
+    if [ "$current_hostname" = "$HOSTNAME_TARGET" ]; then
+        log_info "主机名已为 $HOSTNAME_TARGET，无需修改"
+        return 0
+    fi
+
+    log_info "当前主机名为 '$current_hostname'，正在修改为 '$HOSTNAME_TARGET'..."
+
+    # 设置主机名
+    if uci set "system.@system[0].hostname=$HOSTNAME_TARGET" 2>/dev/null; then
+        if uci commit system 2>/dev/null; then
+            # 立即生效（无需重启）
+            if echo "$HOSTNAME_TARGET" > /proc/sys/kernel/hostname 2>/dev/null; then
+                log_info "主机名已成功修改为 $HOSTNAME_TARGET"
+                return 0
+            else
+                log_error "写入 /proc/sys/kernel/hostname 失败，重启后生效"
+                return 0  # UCI 已提交，重启后仍会生效
+            fi
+        else
+            log_error "提交 system 配置失败"
+            return 1
+        fi
+    else
+        log_error "设置主机名失败"
+        return 1
+    fi
 }
 
 #-------------------------------------------------------------------------------
@@ -186,6 +225,9 @@ EOF
 main() {
     log_info "开始应用自定义系统配置..."
     
+    # 配置路由器主机名
+    configure_hostname
+
     # 配置连接跟踪
     configure_conntrack
     
