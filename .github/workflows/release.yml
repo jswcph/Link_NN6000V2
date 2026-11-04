@@ -11,8 +11,6 @@ on:
         description: 'PPPoE 宽带密码 (留空使用默认值 "-")'
         required: false
         default: '-'
-  schedule:
-    
 
 env:
   DEVICE_MODEL: link_nn6000v2_immwrt
